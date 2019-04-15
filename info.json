@@ -1,0 +1,10 @@
+{
+  "name": "actual-craft-times-remade",
+  "author": "Pawz",
+  "version": "1.0.1",
+  "title": "Actual Craft Times Remade",
+  "homepage": "",
+  "description": "Indicates the number of items per second a machine consumes and produces",
+  "factorio_version": "0.17",
+  "dependencies": ["base >= 0.17.00"]
+}
