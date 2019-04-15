@@ -33,11 +33,11 @@ local function createProductionDetailsInElement(gui_element, entity, playerIndex
         local container = ingredientFrame.add {type = "frame", direction = "vertical", caption = "Ingredients"}
         if (production.ingredients) then
             for i = 1, #production.ingredients do
-                local prod = production.ingredients[i]
-                local sprite = getValidSprite(player, prod.type .. "/" .. prod.name)
-                local amount = prod.extra or prod.amount or prod.amount_max
+                local ingredient = production.ingredients[i]
+                local sprite = getValidSprite(player, ingredient.spritePath)
+                local amount = ingredient.amount
                 amount = production.productsPerSecond * amount * multiplier
-                local name = game[prod.type .. "_prototypes"][prod.name].localised_name
+                local name = game[ingredient.type .. "_prototypes"][ingredient.name].localised_name
 
                 addListItem(container, name, amount, sprite)
             end
@@ -46,8 +46,8 @@ local function createProductionDetailsInElement(gui_element, entity, playerIndex
         if (production.products) then
             for i = 1, #production.products do
                 local prod = production.products[i]
-                local sprite = getValidSprite(player, prod.type .. "/" .. prod.name)
-                local amount = prod.extra or prod.amount or prod.amount_max
+                local sprite = getValidSprite(player, prod.spritePath)
+                local amount = prod.amount
                 amount = production.productsPerSecond * amount * multiplier
                 local name = game[prod.type .. "_prototypes"][prod.name].localised_name
                 addListItem(container, name, amount, sprite)
@@ -60,24 +60,30 @@ local function createProductionMultiplierInElement(gui_element, playerIndex, mul
     local container = gui_element.add {type = "frame", direction = "vertical", name = playerIndex .. "_slider_container"}
     container.add {type = "label", caption = "Multiplier: " .. multiplier, name = playerIndex .. "_slider_label"}
     container.add {type = "slider", caption = "Multiplier", name = playerIndex .. "_slider", value = multiplier, minimum_value = 1, maxiumum_value = 50}
+    container.add {type = "text-box", caption = "Multiplier", name = playerIndex .. "_slider_value", value = multiplier}
 end
 
 local function openGui(entity, playerIndex)
-    if (entity and playerIndex) then
+    if (playerIndex) then
         local player = game.players[playerIndex]
-        local guiContext = player.gui["left"]
-        local frameName = playerIndex .. "_ACT_Frame"
-        local frame =
-            guiContext.add {
-            type = "frame",
-            name = frameName,
-            direction = "vertical",
-            caption = "Current Production Details"
-        }
-        prod = frame.add {type = "flow", name = playerIndex .. "_production_flow"}
-        createProductionDetailsInElement(prod, entity, playerIndex, 1)
-        control = frame.add {type = "flow", name = playerIndex .. "_control_flow"}
-        createProductionMultiplierInElement(control, playerIndex, 1)
+        if (settings.get_player_settings(player)["ACT-show-interface"].value and entity) then
+            local productionNumbers = ACT.getProductionNumbersForEntity(entity)
+            if (productionNumbers) then
+                local guiContext = player.gui["left"]
+                local frameName = playerIndex .. "_ACT_Frame"
+                local frame =
+                    guiContext.add {
+                    type = "frame",
+                    name = frameName,
+                    direction = "vertical",
+                    caption = "Current Production Details"
+                }
+                prod = frame.add {type = "flow", name = playerIndex .. "_production_flow"}
+                createProductionDetailsInElement(prod, entity, playerIndex, 1)
+                control = frame.add {type = "flow", name = playerIndex .. "_control_flow"}
+                createProductionMultiplierInElement(control, playerIndex, 1)
+            end
+        end
     end
 end
 

@@ -1,15 +1,17 @@
-Version 1.0.2 (Upcoming)
+---------------------------------------------------------------------------
+Version: 1.0.2 (Upcoming)
    Upcoming Features:
     - Added a player setting to allow the player to turn the extra view on and off in settings
     - *Experimental* Added a setting to show the last *two* things you clicked on - the idea being you now click on something like
     an oil refinery and a chemical plant and adjust the numbers for each
     - Prevent the window from popping up when clicking on non-factory items
-    
-Version 1.0.1
+
+---------------------------------------------------------------------------
+Version: 1.0.1
   Fixes:
     - Fix a crash that occurred when clicking on labs
 
-
+---------------------------------------------------------------------------
 Version: 1.0.0
   Features:
     - Brand New Redesign of original mod Actual Craft Times

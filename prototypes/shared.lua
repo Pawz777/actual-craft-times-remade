@@ -1,5 +1,31 @@
 local ACT = {}
 
+--[[
+ local production = {
+        ingredients = {
+            name, 
+            quantity,
+            spritePath,
+            type
+        },
+        products = {
+            name,
+            quantity,
+            spritePath,
+            type
+        },
+        craftingSpeed = 0,
+        productCraftingTime = 0,
+        productsPerSecond = 0,
+        effects = {
+            consumption = {bonus = 0.0},
+            speed = {bonus = 0.0},
+            productivity = {bonus = 0.0},
+            pollution = {bonus = 0.0}
+        }
+    }
+
+]]
 function ACT.getProductionNumbersForEntity(entity, playerIndex)
     local production = {
         ingredients = {},
@@ -22,29 +48,41 @@ function ACT.getProductionNumbersForEntity(entity, playerIndex)
             production.effects.productivity.bonus = entity.effects.productivity.bonus
         end
     end
-    local recipe = ACT.getRecipeFromEntity(entity,playerIndex)
+    local recipe = getRecipeFromEntity(entity, playerIndex)
     if (recipe) then
         if entity.type:find("lab") then
-            --spritePath = spriteCheck(player, "technology/" .. recipe.name)
             production.craftingSpeed = 1
             production.productCraftingTime = recipe.research_unit_energy / 60 --ticks to seconds
         else
-        if entity.type:find("mining%-drill") then
-            --spritePath = spriteCheck(player, "entity/" .. recipe.name)
-            production.craftingSpeed = entity.prototype.mining_speed
-            production.productCraftingTime = 1 --confirm?
-        elseif entity.type:find("pumpjack") then
-            production.craftingSpeed = entity.miningTarget.amount
-            production.productCraftingTime = 1 / 30000
-        elseif entity.type:find("assembling%-machine") or entity.type:find("furnace") or entity.type:find("rocket%-silo") then
-            production.craftingSpeed = entity.prototype.crafting_speed
-            production.productCraftingTime = recipe.energy
-        --spritePath = spriteCheck(player, "recipe/" .. recipe.name)
+            if entity.type:find("mining%-drill") then
+                production.craftingSpeed = entity.prototype.mining_speed
+                production.productCraftingTime = 1 --confirm?
+            elseif entity.type:find("pumpjack") then
+                production.craftingSpeed = entity.miningTarget.amount
+                production.productCraftingTime = 1 / 30000
+            elseif entity.type:find("assembling%-machine") or entity.type:find("furnace") or entity.type:find("rocket%-silo") then
+                production.craftingSpeed = entity.prototype.crafting_speed
+                production.productCraftingTime = recipe.energy
+            end
+            for i = 1, #recipe.ingredients do
+                local ing = recipe.ingredients[i]
+                production.ingredients[i] = {
+                    name = ing.name,
+                    spritePath = ing.type .. "/" .. ing.name,
+                    amount = ing.extra or ing.amount or ing.amount_max,
+                    type = ing.type
+                }
+            end
+            for i = 1, #recipe.products do
+                local ing = recipe.products[i]
+                production.products[i] = {
+                    name = ing.name,
+                    spritePath = ing.type .. "/" .. ing.name,
+                    amount = ing.extra or ing.amount or ing.amount_max,
+                    type = ing.type
+                }
+            end
         end
-        production.ingredients = recipe.ingredients
-        production.products = recipe.products
-    end
-
 
         --Calculate crafting speed with bonuses
         production.craftingSpeed = production.craftingSpeed + (production.craftingSpeed * production.effects.speed.bonus)
@@ -78,19 +116,8 @@ function getRecipeFromFurnace(entity)
     end
 end
 
-function ACT.writeRecipe(recipePrototype)
-    local recipe = {}
-    recipe.name = recipePrototype.name or nil
-    recipe.energy = recipePrototype.energy or nil
-    recipe.localised_name = recipePrototype.localised_name or nil
-    recipe.products = recipePrototype.products or nil
-    recipe.ingredients = recipePrototype.ingredients or nil
-    --recipe.type = recipePrototype.type or nil
-    return serpent.block(recipe)
-end
-
 --Gets the currently crafting recipe
-function ACT.getRecipeFromEntity(entity, playerIndex)
+function getRecipeFromEntity(entity, playerIndex)
     local recipe
     if entity.type:find("lab") then
         recipe = nil --game.players[playerIndex].force.current_research
