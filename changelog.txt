@@ -1,4 +1,12 @@
 ---------------------------------------------------------------------------
+Version: 1.0.2
+  Features:
+     - Shifted everything to hide behind a mod button instead of being always visible
+     - Reworked UI to look nicer
+     - Reworked code to view & tweak multiple recipes at the same time
+     - Increased multiplier maximum amount to 200
+
+---------------------------------------------------------------------------
 Version: 1.0.2 (Upcoming)
    Upcoming Features:
     - Added a player setting to allow the player to turn the extra view on and off in settings
