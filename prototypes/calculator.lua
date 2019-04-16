@@ -117,8 +117,17 @@ local function addEntity(entity, playerIndex)
                     player.gui.left.ACTR_Calculator_Frame[entity.unit_number .. "_entity_flow"].destroy()
                 end
                 local entity_flow = player.gui.left.ACTR_Calculator_Frame.add {type = "flow", name = entity.unit_number .. "_entity_flow", direction = "vertical"}
+                local header = entity_flow.add {type = "flow", direction = "horizontal"}
 
-                entity_flow.add {type = "label", style = "heading_1_label", caption = entity.prototype.localised_name}
+                header.add {type = "label", style = "heading_1_label", caption = entity.prototype.localised_name}
+                if (productionNumbers.effects.productivity.bonus > 0 or productionNumbers.effects.speed.bonus > 0) then
+                    header.add {
+                        type = "label",
+                        style = "heading_3_label",
+                        caption = "(Spd:" ..
+                            round(productionNumbers.effects.speed.bonus * 100, 0) .. "% Prod:" .. round(productionNumbers.effects.productivity.bonus * 100, 0) .. "%)"
+                    }
+                end
                 prod = entity_flow.add {type = "flow", name = entity.unit_number .. "_production_flow"}
                 createProductionDetailsInElement(prod, entity, playerIndex, 1)
                 control = entity_flow.add {type = "flow", name = entity.unit_number .. "_control_flow"}

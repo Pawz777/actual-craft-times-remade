@@ -1,7 +1,7 @@
 {
   "name": "actual-craft-times-remade",
   "author": "Pawz",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "title": "Actual Craft Times Remade",
   "homepage": "",
   "description": "Indicates the number of items per second a machine consumes and produces",
