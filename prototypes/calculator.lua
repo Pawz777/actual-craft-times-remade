@@ -47,8 +47,7 @@ local function createProductionDetailsInElement(gui_element, entity, playerIndex
             for i = 1, #production.summary_ingredients do
                 local ingredient = production.summary_ingredients[i]
                 local sprite = getValidSprite(player, ingredient.spritePath)
-                local amount = ingredient.amount
-                amount = production.productsPerSecond * amount * multiplier
+                local amount = ingredient.amount * multiplier
                 local name = game[ingredient.type .. "_prototypes"][ingredient.name].localised_name
 
                 addIngredientRow(container, name, amount, sprite)
@@ -61,8 +60,7 @@ local function createProductionDetailsInElement(gui_element, entity, playerIndex
             for i = 1, #production.summary_products do
                 local prod = production.summary_products[i]
                 local sprite = getValidSprite(player, prod.spritePath)
-                local amount = prod.amount
-                amount = production.productsPerSecond * amount * multiplier
+                local amount = prod.amount * multiplier
                 local name = game[prod.type .. "_prototypes"][prod.name].localised_name
                 addIngredientRow(container, name, amount, sprite)
             end
@@ -70,7 +68,7 @@ local function createProductionDetailsInElement(gui_element, entity, playerIndex
     end
 end
 
-local function createProductionMultiplierInElement(gui_element, entity, multiplier)
+local function createProductionMultiplierInElement(gui_element, entity, multiplier, multiplierMax)
     local container = gui_element.add {type = "flow", direction = "vertical", name = entity.unit_number .. "_slider_container"}
     container.add {type = "label", caption = "Multiplier: " .. multiplier, name = entity.unit_number .. "_slider_label"}
     local slider =
@@ -80,7 +78,7 @@ local function createProductionMultiplierInElement(gui_element, entity, multipli
         name = entity.unit_number .. "_ACTR_multiplier_slider",
         value = multiplier,
         minimum_value = 1,
-        maximum_value = 200
+        maximum_value = multiplierMax
     }
     --container.add {type = "text-box", caption = "Multiplier", name = playerIndex .. "_slider_value", value = multiplier}
     global.ACTR.registeredEntityMultipliers[entity.unit_number .. "_ACTR_multiplier_slider"] = entity
@@ -110,6 +108,7 @@ end
 local function addEntity(entity, playerIndex)
     if (playerIndex) then
         local player = game.players[playerIndex]
+        local multiplierMax = settings.get_player_settings(player)["ACTR-Multiplier"].value or 200
         if (entity and player.gui.left.ACTR_Calculator_Frame) then
             local productionNumbers = ACTR.getProductionNumbersForEntity(entity, playerIndex)
             if (productionNumbers) then
@@ -117,12 +116,21 @@ local function addEntity(entity, playerIndex)
                     player.gui.left.ACTR_Calculator_Frame[entity.unit_number .. "_entity_flow"].destroy()
                 end
                 local entity_flow = player.gui.left.ACTR_Calculator_Frame.add {type = "flow", name = entity.unit_number .. "_entity_flow", direction = "vertical"}
+                local header = entity_flow.add {type = "flow", direction = "horizontal"}
 
-                entity_flow.add {type = "label", style = "heading_1_label", caption = entity.prototype.localised_name}
+                header.add {type = "label", style = "heading_1_label", caption = entity.prototype.localised_name}
+                if (productionNumbers.effects.productivity.bonus > 0 or productionNumbers.effects.speed.bonus > 0) then
+                    header.add {
+                        type = "label",
+                        style = "heading_3_label",
+                        caption = "(Spd:" ..
+                            round(productionNumbers.effects.speed.bonus * 100, 0) .. "% Prod:" .. round(productionNumbers.effects.productivity.bonus * 100, 0) .. "%)"
+                    }
+                end
                 prod = entity_flow.add {type = "flow", name = entity.unit_number .. "_production_flow"}
                 createProductionDetailsInElement(prod, entity, playerIndex, 1)
                 control = entity_flow.add {type = "flow", name = entity.unit_number .. "_control_flow"}
-                createProductionMultiplierInElement(control, entity, 1)
+                createProductionMultiplierInElement(control, entity, 1,multiplierMax)
             end
         end
     end

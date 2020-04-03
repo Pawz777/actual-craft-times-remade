@@ -1,4 +1,16 @@
 ---------------------------------------------------------------------------
+Version: 1.0.4
+  Fixes:
+     - Productivity Modules now correctly show the ingredients used
+  Features: 
+     - Added a user configurable option to set the max multiplier.
+
+---------------------------------------------------------------------------
+Version: 1.0.3
+  Features:
+     - Entities now show the boost value behind their name for productivity and speed boosts
+     
+---------------------------------------------------------------------------
 Version: 1.0.2
   Features:
      - Shifted everything to hide behind a mod button instead of being always visible

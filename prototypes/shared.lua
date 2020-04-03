@@ -49,6 +49,8 @@ function ACT.getProductionNumbersForEntity(entity, playerIndex)
             production.effects.productivity.bonus = entity.effects.productivity.bonus
         end
     end
+   
+
     local recipe = getRecipeFromEntity(entity, playerIndex)
     if (recipe) then
         if entity.type:find("lab") then
@@ -64,12 +66,16 @@ function ACT.getProductionNumbersForEntity(entity, playerIndex)
             production.craftingSpeed = entity.prototype.crafting_speed
             production.productCraftingTime = recipe.energy
         end
+         --Calculate crafting speed with bonuses
+        production.craftingSpeed = production.craftingSpeed + (production.craftingSpeed * production.effects.speed.bonus)
+        local baseProductsPerSecond = production.craftingSpeed / production.productCraftingTime
+
         for i = 1, #recipe.ingredients do
             local ing = recipe.ingredients[i]
             production.summary_ingredients[i] = {
                 name = ing.name,
                 spritePath = ing.type .. "/" .. ing.name,
-                amount = ing.extra or ing.amount or ing.amount_max,
+                amount = (ing.extra or ing.amount or ing.amount_max) * baseProductsPerSecond,
                 type = ing.type
             }
         end
@@ -78,15 +84,10 @@ function ACT.getProductionNumbersForEntity(entity, playerIndex)
             production.summary_products[i] = {
                 name = ing.name,
                 spritePath = ing.type .. "/" .. ing.name,
-                amount = ing.extra or ing.amount or ing.amount_max,
+                amount =(ing.extra or ing.amount or ing.amount_max)  * (baseProductsPerSecond + (baseProductsPerSecond* production.effects.productivity.bonus)),
                 type = ing.type
             }
         end
-
-        --Calculate crafting speed with bonuses
-        production.craftingSpeed = production.craftingSpeed + (production.craftingSpeed * production.effects.speed.bonus)
-        production.productsPerSecond = production.craftingSpeed / production.productCraftingTime
-
         --Calculate Production bonus
         production.productsPerSecond = production.productsPerSecond + (production.productsPerSecond * production.effects.productivity.bonus)
         --Recipe's energy is exactly its crafting time in seconds, when crafted in an assembling machine with crafting speed exactly equal to one.
