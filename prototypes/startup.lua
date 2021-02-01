@@ -1,3 +1,5 @@
+local mod_gui = require("mod-gui")
+
 Calculator = require "prototypes.calculator"
 
 function player_setup(playerIndex)
