@@ -1,47 +1,39 @@
----------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------
 Version: 1.0.6
   Fixes:
-     - Update to Factorio version 1.1
-
----------------------------------------------------------------------------
+    - Update to Factorio version 1.1
+---------------------------------------------------------------------------------------------------
 Version: 1.0.5
   Fixes:
-     - Update to Factorio version 0.18
-
----------------------------------------------------------------------------
+    - Update to Factorio version 0.18
+---------------------------------------------------------------------------------------------------
 Version: 1.0.4
   Fixes:
-     - Productivity Modules now correctly show the ingredients used
-  Features: 
-     - Added a user configurable option to set the max multiplier.
-
----------------------------------------------------------------------------
+    - Productivity Modules now correctly show the ingredients used
+  Features:
+    - Added a user configurable option to set the max multiplier.
+---------------------------------------------------------------------------------------------------
 Version: 1.0.3
   Features:
-     - Entities now show the boost value behind their name for productivity and speed boosts
-     
----------------------------------------------------------------------------
+    - Entities now show the boost value behind their name for productivity and speed boosts
+---------------------------------------------------------------------------------------------------
 Version: 1.0.2
   Features:
-     - Shifted everything to hide behind a mod button instead of being always visible
-     - Reworked UI to look nicer
-     - Reworked code to view & tweak multiple recipes at the same time
-     - Increased multiplier maximum amount to 200
-
----------------------------------------------------------------------------
+    - Shifted everything to hide behind a mod button instead of being always visible
+    - Reworked UI to look nicer
+    - Reworked code to view & tweak multiple recipes at the same time
+    - Increased multiplier maximum amount to 200
+---------------------------------------------------------------------------------------------------
 Version: 1.0.2 (Upcoming)
-   Upcoming Features:
+  Upcoming Features:
     - Added a player setting to allow the player to turn the extra view on and off in settings
-    - *Experimental* Added a setting to show the last *two* things you clicked on - the idea being you now click on something like
-    an oil refinery and a chemical plant and adjust the numbers for each
+    - *Experimental* Added a setting to show the last *two* things you clicked on - the idea being you now click on something like an oil refinery and a chemical plant and adjust the numbers for each
     - Prevent the window from popping up when clicking on non-factory items
-
----------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------
 Version: 1.0.1
   Fixes:
     - Fix a crash that occurred when clicking on labs
-
----------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------
 Version: 1.0.0
   Features:
     - Brand New Redesign of original mod Actual Craft Times
