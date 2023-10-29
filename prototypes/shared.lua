@@ -84,7 +84,7 @@ function ACT.getProductionNumbersForEntity(entity, playerIndex)
             production.summary_products[i] = {
                 name = ing.name,
                 spritePath = ing.type .. "/" .. ing.name,
-                amount =(ing.extra or ing.amount or ing.amount_max)  * (baseProductsPerSecond + (baseProductsPerSecond* production.effects.productivity.bonus)),
+                amount = (ing.extra or ing.amount or (ing.probability * 0.5 * (ing.amount_min + ing.amount_max))  * (baseProductsPerSecond + (baseProductsPerSecond* production.effects.productivity.bonus)),
                 type = ing.type
             }
         end
