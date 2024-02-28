@@ -1,4 +1,8 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.0.7
+  Features:
+    - Add option to select interval (time units) from seconds up to days
+---------------------------------------------------------------------------------------------------
 Version: 1.0.6
   Fixes:
     - Update to Factorio version 1.1
