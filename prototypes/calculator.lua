@@ -1,6 +1,13 @@
 local ACTR = require("prototypes.shared")
 local Calculator = {}
 
+local INTERVAL_MULTIPLIER = {
+    ["second"] = 1,
+    ["minute"] = 60,
+    ["hour"]   = 60*60,
+    ["day"]    = 3600*24,
+}
+
 --- Round a number.
 function round(val, decimal)
     local exp = decimal and 10 ^ decimal or 1
@@ -22,7 +29,7 @@ local function addListItem(gui_element, text, value, spritePath)
         cont.add {type = "sprite", sprite = spritePath, style = "ACTR_small_sprite"}
 
         cont.add {type = "label", caption = text}
-        cont.add {type = "label", caption = round(value, 2) .. " /s"}
+        cont.add {type = "label", caption = value}
     end
 end
 -- Adds to a 3 column table of ingredients
@@ -30,7 +37,7 @@ local function addIngredientRow(gui_element, text, value, spritePath)
     if (gui_element and gui_element.valid) then
         gui_element.add {type = "sprite", sprite = spritePath, style = "ACTR_small_sprite"}
         gui_element.add {type = "label", caption = text, style = "bold_label"}
-        gui_element.add {type = "label", caption = round(value, 2) .. " /s"}
+        gui_element.add {type = "label", caption = value}
     end
 end
 
@@ -38,6 +45,8 @@ local function createProductionDetailsInElement(gui_element, entity, playerIndex
     local production = ACTR.getProductionNumbersForEntity(entity, playerIndex)
     local player = game.players[playerIndex]
     if production then
+        local interval = settings.get_player_settings(player)["ACTR-Interval"].value or "second"
+        local suffix = " /".. interval:sub(1, 1)
         productionFlow = gui_element.add {type = "flow", direction = "horizontal", name = entity.unit_number .. "_productionFlow"}
         recipeFlow = productionFlow.add {type = "flow", direction = "horizontal", name = entity.unit_number .. "_recipeFlow"}
         if (production.summary_ingredients) then
@@ -47,7 +56,7 @@ local function createProductionDetailsInElement(gui_element, entity, playerIndex
             for i = 1, #production.summary_ingredients do
                 local ingredient = production.summary_ingredients[i]
                 local sprite = getValidSprite(player, ingredient.spritePath)
-                local amount = ingredient.amount * multiplier
+                local amount = round(ingredient.amount * multiplier * INTERVAL_MULTIPLIER[interval], 2) .. suffix
                 local name = game[ingredient.type .. "_prototypes"][ingredient.name].localised_name
 
                 addIngredientRow(container, name, amount, sprite)
@@ -60,7 +69,7 @@ local function createProductionDetailsInElement(gui_element, entity, playerIndex
             for i = 1, #production.summary_products do
                 local prod = production.summary_products[i]
                 local sprite = getValidSprite(player, prod.spritePath)
-                local amount = prod.amount * multiplier
+                local amount = round(prod.amount * multiplier * INTERVAL_MULTIPLIER[interval], 2) .. suffix
                 local name = game[prod.type .. "_prototypes"][prod.name].localised_name
                 addIngredientRow(container, name, amount, sprite)
             end
